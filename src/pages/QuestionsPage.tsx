@@ -96,7 +96,7 @@ export function QuestionsPage() {
   ];
 
   return (
-    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
       <Breadcrumb
         items={[
           { title: <Link to="/"><HomeOutlined /> Home</Link> },

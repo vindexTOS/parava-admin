@@ -10,7 +10,7 @@ export function ScraperPage() {
   const isRunning = status?.isRunning ?? false;
 
   return (
-    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+    <Space orientation="vertical" size="middle" style={{ width: '100%' }}>
       <Breadcrumb
         items={[
           { title: <Link to="/"><HomeOutlined /> Home</Link> },
@@ -18,7 +18,7 @@ export function ScraperPage() {
         ]}
       />
       <Card title="Scraper">
-        <Space direction="vertical" size="large">
+        <Space orientation="vertical" size="large">
           <Space align="center">
             <Typography.Text>Status:</Typography.Text>
             <Tag color={isRunning ? 'orange' : 'green'}>{isRunning ? 'Running' : 'Idle'}</Tag>

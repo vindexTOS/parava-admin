@@ -5,6 +5,11 @@ export interface LocalizedText {
   ka: string;
 }
 
+export function formatLocalized(lt: LocalizedText | null | undefined): string {
+  if (!lt) return '';
+  return lt.ka || lt.en || lt.ru || '';
+}
+
 export interface QuestionAnswer {
   text: LocalizedText;
   isCorrect: boolean;
@@ -74,6 +79,53 @@ export interface ScraperStartResponse {
 
 export interface ScraperStatusResponse {
   isRunning: boolean;
+}
+
+// Groups & Rounds
+export interface Group {
+  id: string;
+  name: LocalizedText;
+  color: string;
+  backgroundColor: string;
+  description: LocalizedText | null;
+  createdAt: string;
+  updatedAt: string;
+  rounds?: Round[];
+}
+
+export interface CreateGroupBody {
+  name: LocalizedText;
+  color: string;
+  backgroundColor: string;
+  description?: LocalizedText | null;
+}
+
+export type UpdateGroupBody = Partial<CreateGroupBody>;
+
+export interface Round {
+  id: string;
+  title: LocalizedText;
+  description: LocalizedText | null;
+  xp: number;
+  createdAt: string;
+  updatedAt: string;
+  group?: Group;
+  roundQuestions?: RoundQuestion[];
+}
+
+export interface CreateRoundBody {
+  groupId: string;
+  title: LocalizedText;
+  description?: LocalizedText | null;
+  xp?: number;
+}
+
+export type UpdateRoundBody = Partial<Omit<CreateRoundBody, 'groupId'>>;
+
+export interface RoundQuestion {
+  id: string;
+  orderIndex: number;
+  question: Question;
 }
 
 // App

@@ -8,7 +8,7 @@ const LANG_KEYS = ['en', 'ru', 'ka'] as const;
 
 function LocalizedFields({ namePrefix }: { namePrefix: (string | number)[] }) {
   return (
-    <Space direction="vertical" style={{ width: '100%' }}>
+    <Space orientation="vertical" style={{ width: '100%' }}>
       {LANG_KEYS.map((lang) => (
         <Form.Item
           key={lang}
@@ -206,7 +206,7 @@ export function QuestionFormModal({
       onOk={handleOk}
       width={640}
       confirmLoading={submitting}
-      destroyOnClose
+      destroyOnHidden
       okButtonProps={{ disabled: isEdit && !question }}
     >
       {!canShowForm ? (

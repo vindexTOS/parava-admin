@@ -32,3 +32,14 @@ export function useQuestionOne(id: string | null, enabled: boolean) {
     enabled: enabled && Boolean(id),
   });
 }
+
+const POOL_PAGE_SIZE = 20;
+
+export function useQuestionsPool(enabled: boolean, page: number = 1) {
+  return useQuery({
+    queryKey: ['questionsPool', page, POOL_PAGE_SIZE],
+    queryFn: () =>
+      questionsApi.getAll({ page, limit: POOL_PAGE_SIZE }).then((r) => r.data),
+    enabled,
+  });
+}
