@@ -119,6 +119,24 @@ export function useRoundAddQuestion() {
   });
 }
 
+export function useRoundAddQuestionsBulk() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      roundId,
+      questionIds,
+    }: {
+      roundId: string;
+      questionIds: string[];
+    }) => roundsApi.addQuestionsBulk(roundId, questionIds),
+    onSuccess: (_, { roundId }) => {
+      queryClient.invalidateQueries({ queryKey: ['roundQuestions', roundId] });
+      queryClient.invalidateQueries({ queryKey: ['rounds'] });
+      queryClient.invalidateQueries({ queryKey: ['groups'] });
+    },
+  });
+}
+
 export function useRoundRemoveQuestion() {
   const queryClient = useQueryClient();
   return useMutation({

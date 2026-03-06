@@ -41,6 +41,10 @@ export const roundsApi = {
         orderIndex,
       })
       .then((r) => r.data),
+  addQuestionsBulk: (roundId: string, questionIds: string[]) =>
+    api
+      .post<RoundQuestion[]>(`/rounds/${roundId}/questions/bulk`, { questionIds })
+      .then((r) => r.data),
   removeQuestion: (roundId: string, roundQuestionId: string) =>
     api.delete(`/rounds/${roundId}/questions/${roundQuestionId}`),
   reorderQuestions: (roundId: string, roundQuestionIds: string[]) =>

@@ -1,6 +1,14 @@
 export { useAuth } from './useAuth';
 export { useLogin } from './useLogin';
-export { useQuestionsList, useQuestionDelete, useQuestionOne, useQuestionCategories, useQuestionsPool } from './useQuestions';
+export {
+  useQuestionsList,
+  useQuestionDelete,
+  useQuestionOne,
+  useQuestionCategories,
+  useQuestionsPool,
+  useQuestionSubjects,
+  useQuestionSubjectsGrouped,
+} from './useQuestions';
 export { useQuestionCreate, useQuestionUpdate } from './useQuestionForm';
 export {
   useGroups,
@@ -15,6 +23,7 @@ export {
   useRoundUpdate,
   useRoundDelete,
   useRoundAddQuestion,
+  useRoundAddQuestionsBulk,
   useRoundRemoveQuestion,
   useRoundReorderQuestions,
 } from './useRoadmap';

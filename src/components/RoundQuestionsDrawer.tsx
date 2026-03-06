@@ -15,14 +15,17 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Drawer, Button, Spin, Typography, Empty, Input, Image, Flex, Pagination } from 'antd';
-import { DeleteOutlined, HolderOutlined, SearchOutlined } from '@ant-design/icons';
+import { Drawer, Button, Spin, Typography, Empty, Input, Image, Flex, Pagination, Select, Space, message } from 'antd';
+import { DeleteOutlined, HolderOutlined, SearchOutlined, BookOutlined } from '@ant-design/icons';
 import type { Question, RoundQuestion } from '../api';
-import { useRoundQuestions, useRoundAddQuestion, useRoundRemoveQuestion, useRoundReorderQuestions, useQuestionsPool } from '../hooks';
+import { formatLocalized } from '../api';
+import { questionsApi } from '../api';
+import { useRoundQuestions, useRoundAddQuestion, useRoundAddQuestionsBulk, useRoundRemoveQuestion, useRoundReorderQuestions, useQuestionsPool, useQuestionSubjectsGrouped } from '../hooks';
 
 const DROPPABLE_ROUND = 'round-questions';
 const POOL_PAGE_SIZE = 20;
 const DROPPABLE_POOL = 'pool';
+const SUBJECT_FETCH_LIMIT = 500;
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:1234';
 
 function parseIdFilter(input: string): Set<number> {
@@ -158,8 +161,12 @@ export function RoundQuestionsDrawer({
   const [poolPage, setPoolPage] = useState(1);
   const { data: questionsData, isPending: loadingPool, isError: poolError } = useQuestionsPool(open, poolPage);
   const addMutation = useRoundAddQuestion();
+  const addBulkMutation = useRoundAddQuestionsBulk();
   const removeMutation = useRoundRemoveQuestion();
   const reorderMutation = useRoundReorderQuestions();
+  const { data: subjectsGrouped = [] } = useQuestionSubjectsGrouped();
+  const [selectedSubjectCode, setSelectedSubjectCode] = useState<number | null>(null);
+  const [addingSubject, setAddingSubject] = useState(false);
 
   const [idSearch, setIdSearch] = useState('');
 
@@ -216,6 +223,43 @@ export function RoundQuestionsDrawer({
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );
 
+  const handleAddSubjectToRound = async () => {
+    if (!roundId || selectedSubjectCode == null) return;
+    setAddingSubject(true);
+    try {
+      const res = await questionsApi.getAll({
+        page: 1,
+        limit: SUBJECT_FETCH_LIMIT,
+        subject: selectedSubjectCode,
+      });
+      const allInSubject = Array.isArray(res.data?.data) ? res.data.data : [];
+      const idsToAdd = allInSubject
+        .map((q) => q.id)
+        .filter((id) => !roundQuestionIds.has(id));
+      if (idsToAdd.length === 0) {
+        message.info('All questions from this subject are already in the round.');
+        setSelectedSubjectCode(null);
+        return;
+      }
+      await addBulkMutation.mutateAsync({ roundId, questionIds: idsToAdd });
+      message.success(`Added ${idsToAdd.length} question(s) from subject.`);
+      setSelectedSubjectCode(null);
+    } catch (e: unknown) {
+      const axiosErr = e as { response?: { status?: number; data?: { message?: string | string[] } }; message?: string };
+      const status = axiosErr.response?.status;
+      const body = axiosErr.response?.data;
+      const msg = Array.isArray(body?.message)
+        ? body.message.join(' ')
+        : typeof body?.message === 'string'
+          ? body.message
+          : axiosErr.message || 'Unknown error';
+      const statusText = status != null ? ` (${status})` : '';
+      message.error(`Failed to add questions from subject${statusText}: ${msg}`);
+    } finally {
+      setAddingSubject(false);
+    }
+  };
+
   return (
     <Drawer
       title={`Round: ${roundTitle}`}
@@ -231,6 +275,31 @@ export function RoundQuestionsDrawer({
       >
         <div style={{ display: 'flex', gap: 16, height: 'calc(100vh - 120px)' }}>
           <div style={{ flex: 1, minWidth: 0 }}>
+            <Flex vertical gap={8} style={{ marginBottom: 8 }}>
+              <Typography.Text strong>Add whole subject</Typography.Text>
+              <Space.Compact style={{ width: '100%' }}>
+                <Select
+                  placeholder="Select subject"
+                  allowClear
+                  value={selectedSubjectCode ?? undefined}
+                  onChange={setSelectedSubjectCode}
+                  style={{ flex: 1, minWidth: 160 }}
+                  options={subjectsGrouped.map((s) => ({
+                    value: s.code,
+                    label: `${formatLocalized(s.name)} (${s.questionCount})`,
+                  }))}
+                />
+                <Button
+                  type="primary"
+                  icon={<BookOutlined />}
+                  onClick={handleAddSubjectToRound}
+                  loading={addingSubject}
+                  disabled={selectedSubjectCode == null}
+                >
+                  Add subject to round
+                </Button>
+              </Space.Compact>
+            </Flex>
             <Flex vertical gap={8} style={{ marginBottom: 8 }}>
               <Typography.Text strong>Questions pool</Typography.Text>
               <Input

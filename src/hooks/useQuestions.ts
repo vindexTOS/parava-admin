@@ -3,10 +3,32 @@ import { questionsApi } from '../api';
 import { useQuestionsListStore } from '../stores/questionsListStore';
 
 export function useQuestionsList() {
-  const { page, limit, category } = useQuestionsListStore();
+  const { page, limit, category, subject } = useQuestionsListStore();
   return useQuery({
-    queryKey: ['questions', page, limit, category],
-    queryFn: () => questionsApi.getAll({ page, limit, category: category.length ? category : undefined }).then((r) => r.data),
+    queryKey: ['questions', page, limit, category, subject],
+    queryFn: () =>
+      questionsApi
+        .getAll({
+          page,
+          limit,
+          category: category.length ? category : undefined,
+          subject: subject ?? undefined,
+        })
+        .then((r) => r.data),
+  });
+}
+
+export function useQuestionSubjects() {
+  return useQuery({
+    queryKey: ['questionSubjects'],
+    queryFn: () => questionsApi.getSubjects(),
+  });
+}
+
+export function useQuestionSubjectsGrouped() {
+  return useQuery({
+    queryKey: ['questionSubjectsGrouped'],
+    queryFn: () => questionsApi.getSubjectsGrouped(),
   });
 }
 

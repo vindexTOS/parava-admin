@@ -1,6 +1,8 @@
 import { api } from './apiManager';
 import type {
   Question,
+  QuestionSubject,
+  QuestionSubjectGrouped,
   CreateQuestionBody,
   UpdateQuestionBody,
   PaginatedResponse,
@@ -11,6 +13,12 @@ import type {
 export const questionsApi = {
   getCategories: () =>
     api.get<QuestionCategoryLabels>('/questions/categories').then((r) => r.data),
+
+  getSubjects: () =>
+    api.get<QuestionSubject[]>('/questions/subjects').then((r) => r.data),
+
+  getSubjectsGrouped: () =>
+    api.get<QuestionSubjectGrouped[]>('/questions/subjects/grouped').then((r) => r.data),
 
   getAll: (params?: PaginationParams) =>
     api.get<PaginatedResponse<Question>>('/questions', { params }),

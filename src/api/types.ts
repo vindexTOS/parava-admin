@@ -67,9 +67,22 @@ export interface PaginationParams {
   page?: number;
   limit?: number;
   category?: number[];
+  subject?: number;
 }
 
 export type QuestionCategoryLabels = Record<number, string>;
+
+export interface QuestionSubject {
+  id: string;
+  code: number;
+  name: LocalizedText;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface QuestionSubjectGrouped extends QuestionSubject {
+  questionCount: number;
+}
 
 // Scraper
 export interface ScraperStartResponse {
