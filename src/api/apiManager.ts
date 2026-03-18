@@ -21,6 +21,9 @@ function createInstance(): AxiosInstance {
   instance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
     const token = getStoredToken();
     if (token) config.headers.Authorization = `Bearer ${token}`;
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
+    }
     return config;
   });
 

@@ -7,6 +7,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ProjectOutlined,
+  SmileOutlined,
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { useAuth } from '../hooks';
@@ -16,6 +17,7 @@ const { Sider, Content } = AntLayout;
 const menuItems = [
   { key: '/', icon: <UnorderedListOutlined />, label: 'Questions' },
   { key: '/roadmap', icon: <ProjectOutlined />, label: 'Roadmap' },
+  { key: '/characters', icon: <SmileOutlined />, label: 'Characters' },
   { key: '/scraper', icon: <CloudSyncOutlined />, label: 'Scraper' },
 ];
 
@@ -26,9 +28,11 @@ export function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const selected = location.pathname.startsWith('/roadmap')
     ? '/roadmap'
-    : location.pathname.startsWith('/scraper')
-      ? '/scraper'
-      : '/';
+    : location.pathname.startsWith('/characters')
+      ? '/characters'
+      : location.pathname.startsWith('/scraper')
+        ? '/scraper'
+        : '/';
 
   return (
     <AntLayout hasSider>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, Button, Space, Typography, Collapse, Popconfirm, Empty, Spin, Tag, Breadcrumb } from 'antd';
+import { Card, Button, Space, Typography, Collapse, Popconfirm, Empty, Spin, Tag, Breadcrumb, Image } from 'antd';
 import {
   PlusOutlined,
   EditOutlined,
@@ -14,6 +14,8 @@ import { RoundFormModal } from '../components/RoundFormModal';
 import { RoundQuestionsDrawer } from '../components/RoundQuestionsDrawer';
 import type { Group, Round } from '../api';
 import { formatLocalized } from '../api';
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:1234';
 
 function GroupRoundsSection({
   group,
@@ -49,7 +51,11 @@ function GroupRoundsSection({
               <Card
                 key={r.id}
                 size="small"
-                style={{ minWidth: 200 }}
+                style={{
+                  minWidth: 200,
+                  borderColor: r.color ?? undefined,
+                  borderLeftWidth: r.color ? 3 : undefined,
+                }}
                 actions={[
                   <Button
                     key="q"
@@ -82,7 +88,14 @@ function GroupRoundsSection({
                 ]}
               >
                 <Card.Meta
-                  title={formatLocalized(r.title)}
+                  title={
+                    <Space>
+                      {r.icon && (
+                        <Tag color={r.color ?? 'default'}>{r.icon}</Tag>
+                      )}
+                      {formatLocalized(r.title)}
+                    </Space>
+                  }
                   description={
                     <>
                       <Tag>XP: {r.xp}</Tag>
@@ -168,19 +181,29 @@ export function RoadmapPage() {
           <Collapse
             ghost
             items={groups.map((g) => ({
-              key: g.id,
-              label: (
-                <Space>
-                  <span
-                    style={{
-                      width: 12,
-                      height: 12,
-                      borderRadius: 4,
-                      background: g.backgroundColor,
-                      border: `1px solid ${g.color}`,
-                    }}
+            key: g.id,
+            label: (
+              <Space>
+                {g.mascotUrl && (
+                  <Image
+                    src={`${BASE_URL}${g.mascotUrl}`}
+                    alt="Mascot"
+                    width={40}
+                    height={40}
+                    style={{ objectFit: 'contain', borderRadius: 8 }}
+                    preview={false}
                   />
-                  <Typography.Text strong>{formatLocalized(g.name)}</Typography.Text>
+                )}
+                <span
+                  style={{
+                    width: 12,
+                    height: 12,
+                    borderRadius: 4,
+                    background: g.backgroundColor,
+                    border: `1px solid ${g.color}`,
+                  }}
+                />
+                <Typography.Text strong>{formatLocalized(g.name)}</Typography.Text>
                   <Button
                     type="link"
                     size="small"

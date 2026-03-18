@@ -7,6 +7,7 @@ import { Layout } from './components/Layout';
 import { LoginPage } from './pages/LoginPage';
 import { QuestionsPage } from './pages/QuestionsPage';
 import { RoadmapPage } from './pages/RoadmapPage';
+import { CharactersPage } from './pages/CharactersPage';
 import { ScraperPage } from './pages/ScraperPage';
 
 const queryClient = new QueryClient({
@@ -30,6 +31,7 @@ function AppRoutes() {
       >
         <Route index element={<QuestionsPage />} />
         <Route path="roadmap" element={<RoadmapPage />} />
+        <Route path="characters" element={<CharactersPage />} />
         <Route path="scraper" element={<ScraperPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -17,6 +17,11 @@ export const groupsApi = {
   update: (id: string, body: UpdateGroupBody) =>
     api.patch<Group>(`/groups/${id}`, body).then((r) => r.data),
   delete: (id: string) => api.delete(`/groups/${id}`),
+  uploadMascot: (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return api.post<Group>(`/groups/${id}/mascot`, formData).then((r) => r.data);
+  },
 };
 
 export const roundsApi = {

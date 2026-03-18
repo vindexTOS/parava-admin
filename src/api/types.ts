@@ -101,6 +101,7 @@ export interface Group {
   color: string;
   backgroundColor: string;
   description: LocalizedText | null;
+  mascotUrl: string | null;
   createdAt: string;
   updatedAt: string;
   rounds?: Round[];
@@ -113,12 +114,15 @@ export interface CreateGroupBody {
   description?: LocalizedText | null;
 }
 
-export type UpdateGroupBody = Partial<CreateGroupBody>;
+export type UpdateGroupBody = Partial<CreateGroupBody> & { mascotUrl?: string | null };
 
 export interface Round {
   id: string;
   title: LocalizedText;
   description: LocalizedText | null;
+  icon: string | null;
+  color: string | null;
+  backgroundColor: string | null;
   xp: number;
   createdAt: string;
   updatedAt: string;
@@ -130,10 +134,45 @@ export interface CreateRoundBody {
   groupId: string;
   title: LocalizedText;
   description?: LocalizedText | null;
+  icon?: string | null;
+  color?: string | null;
+  backgroundColor?: string | null;
   xp?: number;
 }
 
 export type UpdateRoundBody = Partial<Omit<CreateRoundBody, 'groupId'>>;
+
+// Characters
+export interface CharacterPhrases {
+  negative: string[];
+  positive: string[];
+  neutral: string[];
+}
+
+export interface CharacterGif {
+  id: string;
+  path: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Character {
+  id: string;
+  name: string;
+  description: string | null;
+  phrases: CharacterPhrases;
+  gifs: CharacterGif[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateCharacterBody {
+  name: string;
+  description?: string | null;
+  phrases?: CharacterPhrases;
+}
+
+export type UpdateCharacterBody = Partial<CreateCharacterBody>;
 
 export interface RoundQuestion {
   id: string;

@@ -57,8 +57,11 @@ export function RoundFormModal({
               title: round.title ?? { en: '', ru: '', ka: '' },
               description: round.description ?? { en: '', ru: '', ka: '' },
               xp: round.xp,
+              icon: round.icon ?? '',
+              color: round.color ?? '',
+              backgroundColor: round.backgroundColor ?? '',
             }
-          : { groupId, xp: 5 }
+          : { groupId, xp: 5, icon: '', color: '', backgroundColor: '' }
       );
       if (!isEdit) form.setFieldValue('groupId', groupId);
     }
@@ -78,6 +81,9 @@ export function RoundFormModal({
               title: values.title as LocalizedText,
               description: desc,
               xp: values.xp,
+              icon: values.icon || null,
+              color: values.color || null,
+              backgroundColor: values.backgroundColor || null,
             },
           },
           { onSuccess: () => onSuccess() }
@@ -113,6 +119,15 @@ export function RoundFormModal({
         )}
         <LocalizedFields namePrefix={['title']} label="Title" />
         <LocalizedFields namePrefix={['description']} label="Description" required={false} />
+        <Form.Item name="icon" label="Icon (Ionicons name)">
+          <Input placeholder="car, book, warning, shield-checkmark..." />
+        </Form.Item>
+        <Form.Item name="color" label="Color">
+          <Input placeholder="#58cc02 (optional, inherits from group)" />
+        </Form.Item>
+        <Form.Item name="backgroundColor" label="Background color">
+          <Input placeholder="#e6f4fe (optional)" />
+        </Form.Item>
         <Form.Item name="xp" label="XP" rules={[{ required: true }]}>
           <InputNumber min={0} style={{ width: '100%' }} />
         </Form.Item>

@@ -27,4 +27,13 @@ export {
   useRoundRemoveQuestion,
   useRoundReorderQuestions,
 } from './useRoadmap';
+export {
+  useCharacters,
+  useCharacterOne,
+  useCharacterCreate,
+  useCharacterUpdate,
+  useCharacterDelete,
+  useCharacterUploadGif,
+  useCharacterRemoveGif,
+} from './useCharacters';
 export { useScraperStatus, useScraperStart, useScraperStop } from './useScraper';
